@@ -17,6 +17,9 @@ MonoBehaviour:
     type: 2}
   StartSegmentsCount: 3
   StartupPauseTime: 2
+  StartCoords:
+    X: 1
+    Y: 1
   StepTime: 0.5
   Bonuses:
   - type: 1

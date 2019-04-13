@@ -13,6 +13,7 @@ namespace Field
 		private FieldBuilder builder;
 		private Dictionary<FieldCoords, Bonus> bonusesOnMap = new Dictionary<FieldCoords, Bonus>();
 		private System.Random random = new System.Random();
+
 		public void Initialize(FieldBuilder builder, SnakeSettings settings)
 		{
 			this.settings = settings;
@@ -43,6 +44,7 @@ namespace Field
 			bonusesOnMap.Clear();
 			builder.Destroy();
 			Build();
+			consumedCount = 0;
 		}
 
 		public void SpawnBonus(Bonus bonus)

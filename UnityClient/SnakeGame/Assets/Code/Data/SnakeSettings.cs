@@ -16,6 +16,8 @@ namespace Data
 		public int StartSegmentsCount = 2;
 		public float StartupPauseTime = 2f;
 
+		public FieldCoords StartCoords;
+
 		public float StepTime = 0.5f;
 
 		[HeaderAttribute("Bonuses")]

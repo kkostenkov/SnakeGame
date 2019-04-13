@@ -40,9 +40,10 @@ namespace Hero
 		public void Spawn()
 		{
 			bodyContainer = new GameObject("Snake").transform;
+			var startCoords = settings.StartCoords;
 			for (var i = 0; i < settings.StartSegmentsCount; i++)
 			{
-				var coords = new FieldCoords(i, 0);
+				var coords = startCoords + new FieldCoords(i, 0);
 				SpawnBodySegment(coords);
 			}
 			timeTillStep = settings.StartupPauseTime;
