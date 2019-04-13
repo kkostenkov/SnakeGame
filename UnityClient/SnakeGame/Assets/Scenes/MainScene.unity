@@ -280,6 +280,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fieldTilePrefab: {fileID: 4152792100791060, guid: f3444ae431f114e40afe3385950c49d3,
     type: 2}
+  bonusSpawnHeight: 2.4
+  tilesSpawnHeight: 0
 --- !u!4 &943886389
 Transform:
   m_ObjectHideFlags: 0

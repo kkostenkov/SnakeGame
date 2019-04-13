@@ -27,19 +27,15 @@ namespace Core
 		{
 			var deltaTime = Time.deltaTime;
 			services.CustomUpdate(deltaTime);
+			field.CustomUpdate(deltaTime);
 			snake.CustomUpdate(deltaTime);
 		}
 
 		private void CreateGameField()
 		{
-			var info = new FieldInfo()
-			{
-				Width = settings.Width,
-				Length = settings.Length,
-			};
 			field = new GameField();
-			field.Initialize(info);
-			fieldBuilder.Build(info);
+			field.Initialize(fieldBuilder, settings);
+			field.Build();
 		}
 
 		private void CreateSnake()

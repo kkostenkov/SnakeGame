@@ -11,6 +11,7 @@ namespace Hero
 	public class Snake 
 	{
 		private SnakeSettings settings;
+		private ConsumedBonuses bonuses = new ConsumedBonuses();
 
 		private List<BodySegment> segments = new List<BodySegment>();
 		private Transform bodyContainer;
@@ -70,7 +71,11 @@ namespace Hero
 				return;
 			}
 			MakeStep();		
-			CheckCollision();	
+			if (CheckCollision())
+			{
+				return;
+			}
+			ConsumeBonuses();
 			timeTillStep = settings.StepTime;
 		}
 
@@ -118,16 +123,18 @@ namespace Hero
 			}
 		}
 
-		private void CheckCollision()
+		private bool CheckCollision()
 		{
+			bool isCollided = false;
 			var firstSegmentPos = segments[0].Position;
 			var isOutOfField = !field.IsInBounds(firstSegmentPos);
 			if (isOutOfField)
 			{
 				Debug.Log("head is out of field");
 				Destroy();
+				isCollided = true;
 			}
-			if (segments.Count > 1)
+			if (segments.Count > 1 && !isCollided)
 			{
 				bool isCollidedWithSelf = false;
 				for (int i = 1; i < segments.Count; i++)
@@ -142,7 +149,25 @@ namespace Hero
 				{
 					Debug.Log("Collided with self");
 					Destroy();
+					isCollided = true;
 				}
+			}
+			return isCollided;
+		}
+
+		private void ConsumeBonuses()
+		{
+			var firstSegmentPos = segments[0].Position;
+			var bonus = field.TryConsumeBonusAt(firstSegmentPos);
+			switch (bonus)
+			{
+				case Bonus.Growth:
+					bonuses.Apply(firstSegmentPos);		
+					break;
+				case Bonus.Speed:
+					break;
+				default:
+					return;
 			}
 		}
 	}

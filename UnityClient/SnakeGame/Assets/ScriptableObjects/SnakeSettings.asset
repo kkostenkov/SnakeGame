@@ -17,3 +17,10 @@ MonoBehaviour:
     type: 2}
   StartSegmentsCount: 5
   StepTime: 0.5
+  Bonuses:
+  - type: 1
+    prefab: {fileID: 4009169901533420, guid: e223538798e71404e9a3f92c34e40089, type: 2}
+    Frequency: 1
+  - type: 2
+    prefab: {fileID: 4074523568226822, guid: 51b66db3c6ef752428c04aa857d1fbb1, type: 2}
+    Frequency: 2

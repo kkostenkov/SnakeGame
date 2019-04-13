@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,5 +17,16 @@ namespace Data
 
 		public float StepTime = 0.5f;
 
+		[HeaderAttribute("Bonuses")]
+		public List<BonusSettting> Bonuses = new List<BonusSettting>();
+
+	}
+
+	[Serializable]
+	public class BonusSettting
+	{
+		public Bonus type;
+		public Transform prefab;
+		public int Frequency;
 	}
 }
