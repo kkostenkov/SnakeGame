@@ -10,10 +10,11 @@ namespace Core
 {
 	public class Core : MonoBehaviour 
 	{
-		[SerializeField] private FieldBuilder field;
+		[SerializeField] private FieldBuilder fieldBuilder;
 		[SerializeField] private SnakeSettings settings;
 
 		private Snake snake;
+		private GameField field;
 		private ServiceProvider services;
 		void Start () 
 		{
@@ -36,13 +37,16 @@ namespace Core
 				Width = settings.Width,
 				Length = settings.Length,
 			};
-			field.Build(info);
+			field = new GameField();
+			field.Initialize(info);
+			fieldBuilder.Build(info);
 		}
 
 		private void CreateSnake()
 		{
 			snake = new Snake(settings);
 			snake.SetControls(services.InputListener);
+			snake.SetField(field);
 			snake.Spawn();
 			
 		}

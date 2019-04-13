@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Data;
+using Field;
 using InputListener;
 
 namespace Hero
@@ -13,9 +14,9 @@ namespace Hero
 
 		private List<BodySegment> segments = new List<BodySegment>();
 		private Transform bodyContainer;
-		private List<Transform> segmentViews = new List<Transform>();
 
 		private IInputListener input;
+		private GameField field;
 		private float timeTillStep;
 		public Snake(SnakeSettings settings)
 		{
@@ -27,6 +28,11 @@ namespace Hero
 			this.input = input;
 		}
 
+
+		public void SetField(GameField field)
+		{
+			this.field = field;
+		}
 		public void Spawn()
 		{
 			bodyContainer = new GameObject("Snake").transform;
@@ -37,7 +43,7 @@ namespace Hero
 				segments.Add(segment);
 				var pos = segment.Position.ToVector3();
 				var segmentView = GameObject.Instantiate(settings.BodySegment, pos, Quaternion.identity, bodyContainer);
-				segmentViews.Add(segmentView);
+				segment.SetView(segmentView);
 			}
 			timeTillStep = 2f;
 		}
@@ -46,7 +52,6 @@ namespace Hero
 		{
 			GameObject.Destroy(bodyContainer.gameObject);
 			bodyContainer = null;
-			segmentViews.Clear();
 			segments.Clear();
 		}
 
@@ -61,7 +66,8 @@ namespace Hero
 			{
 				return;
 			}
-			MakeStep();			
+			MakeStep();		
+			CheckCollision();	
 			timeTillStep = settings.StepTime;
 		}
 
@@ -88,7 +94,7 @@ namespace Hero
 					throw new NotImplementedException(string.Format("Unknown move direction", direction));
 			}
 			FieldCoords nextPos = firstSegmentPos + deltaPos;
-			if (segmentViews.Count > 1)
+			if (segments.Count > 1)
 			{
 				var secondSegmentPos = segments[1].Position;
 				if (nextPos == secondSegmentPos)
@@ -103,11 +109,35 @@ namespace Hero
 				var segment = segments[i];
 				var oldPos = segment.Position;
 				segment.Position = nextPos;
-
-				var segmentView = segmentViews[i];
-				segmentView.position = nextPos.ToVector3();
+				segment.View.position = nextPos.ToVector3();
 
 				nextPos = oldPos;
+			}
+		}
+
+		private void CheckCollision()
+		{
+			var firstSegmentPos = segments[0].Position;
+			var isOutOfField = !field.IsInBounds(firstSegmentPos);
+			if (isOutOfField)
+			{
+				Debug.LogError("head is out of field");
+			}
+			if (segments.Count > 1)
+			{
+				bool isCollidedWithSelf = false;
+				for (int i = 1; i < segments.Count; i++)
+				{
+					if (firstSegmentPos == segments[i].Position)
+					{
+						isCollidedWithSelf = true;
+						break;
+					}
+				}
+				if (isCollidedWithSelf)
+				{
+					Debug.LogError("collided with self");
+				}
 			}
 		}
 	}
