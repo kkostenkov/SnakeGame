@@ -11,8 +11,9 @@ namespace Hero
 	{
 		private SnakeSettings settings;
 
+		private List<BodySegment> segments = new List<BodySegment>();
 		private Transform bodyContainer;
-		private List<Transform> bodySegments = new List<Transform>();
+		private List<Transform> segmentViews = new List<Transform>();
 
 		private IInputListener input;
 		private float timeTillStep;
@@ -29,12 +30,14 @@ namespace Hero
 		public void Spawn()
 		{
 			bodyContainer = new GameObject("Snake").transform;
-			var containerPos = bodyContainer.position;
 			for (var i = 0; i < settings.StartSegmentsCount; i++)
 			{
-				var pos = new Vector3(containerPos.x + i, containerPos.y, containerPos.z);
-				var segment = GameObject.Instantiate(settings.BodySegment, pos, Quaternion.identity, bodyContainer);
-				bodySegments.Add(segment);
+				var segment = new BodySegment();
+				segment.Position = new FieldCoords(i, 0);
+				segments.Add(segment);
+				var pos = segment.Position.ToVector3();
+				var segmentView = GameObject.Instantiate(settings.BodySegment, pos, Quaternion.identity, bodyContainer);
+				segmentViews.Add(segmentView);
 			}
 			timeTillStep = 2f;
 		}
@@ -43,7 +46,8 @@ namespace Hero
 		{
 			GameObject.Destroy(bodyContainer.gameObject);
 			bodyContainer = null;
-			bodySegments.Clear();
+			segmentViews.Clear();
+			segments.Clear();
 		}
 
 		public void CustomUpdate(float deltaTime)
@@ -57,36 +61,36 @@ namespace Hero
 			{
 				return;
 			}
-			MakeStep();
+			MakeStep();			
 			timeTillStep = settings.StepTime;
 		}
 
 		private void MakeStep()
 		{
-			var firstSegmentPos = bodySegments[0].position;
+			var firstSegmentPos = segments[0].Position;
 			var direction = input.GetLastDirection();
-			var deltaPos = Vector3.zero;
+			FieldCoords deltaPos;
 			switch (direction)
 			{
 				case MoveDirection.Up:
-					deltaPos += Vector3.forward;
+					deltaPos = FieldCoords.up;
 					break;
 				case MoveDirection.Right:
-					deltaPos += Vector3.right;
+					deltaPos = FieldCoords.right;
 					break;
 				case MoveDirection.Down:
-					deltaPos += Vector3.back;
+					deltaPos = FieldCoords.down;
 					break;
 				case MoveDirection.Left:
-					deltaPos += Vector3.left;
+					deltaPos = FieldCoords.left;
 					break;
 				default:
 					throw new NotImplementedException(string.Format("Unknown move direction", direction));
 			}
-			Vector3 nextPos = firstSegmentPos + deltaPos;
-			if (bodySegments.Count > 1)
+			FieldCoords nextPos = firstSegmentPos + deltaPos;
+			if (segmentViews.Count > 1)
 			{
-				var secondSegmentPos = bodySegments[1].position;
+				var secondSegmentPos = segments[1].Position;
 				if (nextPos == secondSegmentPos)
 				{
 					// incorrect direction input
@@ -94,11 +98,15 @@ namespace Hero
 				}
 			}
 			
-			for (int i = 0; i < bodySegments.Count; i++)
+			for (int i = 0; i < segments.Count; i++)
 			{
-				var segment = bodySegments[i];
-				var oldPos = segment.position;
-				segment.position = nextPos;
+				var segment = segments[i];
+				var oldPos = segment.Position;
+				segment.Position = nextPos;
+
+				var segmentView = segmentViews[i];
+				segmentView.position = nextPos.ToVector3();
+
 				nextPos = oldPos;
 			}
 		}
