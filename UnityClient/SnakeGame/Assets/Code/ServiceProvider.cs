@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using InputListener;
 
-/// Platform-dependant services aggregation point
 public class ServiceProvider
 {
 	private IInputListener inputListener;

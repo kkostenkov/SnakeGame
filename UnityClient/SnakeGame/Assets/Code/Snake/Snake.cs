@@ -50,8 +50,11 @@ namespace Hero
 
 		public void Destroy()
 		{
-			GameObject.Destroy(bodyContainer.gameObject);
-			bodyContainer = null;
+			if (bodyContainer != null)
+			{
+				GameObject.Destroy(bodyContainer.gameObject);
+				bodyContainer = null;
+			}
 			segments.Clear();
 		}
 
@@ -121,7 +124,8 @@ namespace Hero
 			var isOutOfField = !field.IsInBounds(firstSegmentPos);
 			if (isOutOfField)
 			{
-				Debug.LogError("head is out of field");
+				Debug.Log("head is out of field");
+				Destroy();
 			}
 			if (segments.Count > 1)
 			{
@@ -136,7 +140,8 @@ namespace Hero
 				}
 				if (isCollidedWithSelf)
 				{
-					Debug.LogError("collided with self");
+					Debug.Log("Collided with self");
+					Destroy();
 				}
 			}
 		}

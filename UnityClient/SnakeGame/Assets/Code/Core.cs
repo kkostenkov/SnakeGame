@@ -55,7 +55,10 @@ namespace Core
 		{
 			if (GUILayout.Button("reset"))
 			{	
-				snake.Destroy();
+				if (snake != null)
+				{
+					snake.Destroy();
+				}
 				CreateSnake();	
 			}
 			if (GUILayout.Button("destroy"))
