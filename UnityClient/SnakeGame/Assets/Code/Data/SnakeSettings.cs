@@ -10,5 +10,11 @@ namespace Data
 		public int Width = 5;
 		public int Length = 6;
 
+		[HeaderAttribute("Hero")]
+		public Transform BodySegment;
+		public int StartSegmentsCount = 2;
+
+		public float StepTime = 0.5f;
+
 	}
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Data;
 using Field;
+using Hero;
+using InputListener;
 
 namespace Core
 {
@@ -10,14 +12,21 @@ namespace Core
 	{
 		[SerializeField] private FieldBuilder field;
 		[SerializeField] private SnakeSettings settings;
+
+		private Snake snake;
+		private ServiceProvider services;
 		void Start () 
 		{
+			services = new ServiceProvider();
 			CreateGameField();
+			CreateSnake();
 		}
 		
 		void Update () 
 		{
-			
+			var deltaTime = Time.deltaTime;
+			services.CustomUpdate(deltaTime);
+			snake.CustomUpdate(deltaTime);
 		}
 
 		private void CreateGameField()
@@ -30,10 +39,20 @@ namespace Core
 			field.Build(info);
 		}
 
+		private void CreateSnake()
+		{
+			snake = new Snake(settings);
+			snake.SetControls(services.InputListener);
+			snake.Spawn();
+			
+		}
+
 		public void OnGUI()
 		{
-			if (GUILayout.Button("build"))
+			if (GUILayout.Button("reset"))
 			{	
+				snake.Destroy();
+				CreateSnake();	
 			}
 			if (GUILayout.Button("destroy"))
 			{
