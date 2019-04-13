@@ -49,5 +49,26 @@ namespace Data
 		{
 			return new FieldCoords(a.X - b.X, a.Y - b.Y);
 		}
+
+		public override int GetHashCode()
+		{
+			unchecked // Overflow is fine, just wrap
+			{
+				int hash = 17;
+				hash = hash * 23 + X.GetHashCode();
+				hash = hash * 23 + Y.GetHashCode();
+				return hash;
+			}
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+			{
+				return false;
+			}
+			FieldCoords c = (FieldCoords)obj;  
+        	return (this.X == c.X) && (this.Y == c.Y); 
+		}
 	}
 }

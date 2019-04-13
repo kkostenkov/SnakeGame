@@ -11,8 +11,4 @@ namespace Data
 		Growth,
 		Speed,
 	}
-	public class SegmentBonus
-	{
-		
-	}
 }

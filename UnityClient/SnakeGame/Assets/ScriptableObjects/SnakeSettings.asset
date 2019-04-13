@@ -15,7 +15,7 @@ MonoBehaviour:
   Length: 10
   BodySegment: {fileID: 4843657204563716, guid: 6ced22f27d1928c46a7fa3edb4522d18,
     type: 2}
-  StartSegmentsCount: 5
+  StartSegmentsCount: 3
   StartupPauseTime: 2
   StepTime: 0.5
   Bonuses:
