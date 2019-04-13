@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Data;
 using Field;
@@ -19,16 +20,18 @@ namespace Hero
 		private IInputListener input;
 		private GameField field;
 		private float timeTillStep;
+		private float stepTime;
+		private Vector3 fatSegmentScale = Vector3.one * 1.3f;
 		public Snake(SnakeSettings settings)
 		{
 			this.settings = settings;
+			stepTime = settings.StepTime;
 		}
 
 		public void SetControls(IInputListener input)
 		{
 			this.input = input;
 		}
-
 
 		public void SetField(GameField field)
 		{
@@ -39,14 +42,20 @@ namespace Hero
 			bodyContainer = new GameObject("Snake").transform;
 			for (var i = 0; i < settings.StartSegmentsCount; i++)
 			{
-				var segment = new BodySegment();
-				segment.Position = new FieldCoords(i, 0);
-				segments.Add(segment);
-				var pos = segment.Position.ToVector3();
-				var segmentView = GameObject.Instantiate(settings.BodySegment, pos, Quaternion.identity, bodyContainer);
-				segment.SetView(segmentView);
+				var coords = new FieldCoords(i, 0);
+				SpawnBodySegment(coords);
 			}
-			timeTillStep = 2f;
+			timeTillStep = settings.StartupPauseTime;
+		}
+
+		private void SpawnBodySegment(FieldCoords coords)
+		{
+			var segment = new BodySegment();
+			segment.Position = coords;
+			segments.Add(segment);
+			var pos = segment.Position.ToVector3();
+			var segmentView = GameObject.Instantiate(settings.BodySegment, pos, Quaternion.identity, bodyContainer);
+			segment.SetView(segmentView);
 		}
 
 		public void Destroy()
@@ -76,7 +85,7 @@ namespace Hero
 				return;
 			}
 			ConsumeBonuses();
-			timeTillStep = settings.StepTime;
+			timeTillStep = stepTime;
 		}
 
 		private void MakeStep()
@@ -118,8 +127,13 @@ namespace Hero
 				var oldPos = segment.Position;
 				segment.Position = nextPos;
 				segment.View.position = nextPos.ToVector3();
+				segment.View.localScale = bonuses.Has(nextPos) ? fatSegmentScale : Vector3.one;
 
 				nextPos = oldPos;
+			}
+			if (bonuses.Use(nextPos))
+			{
+				SpawnBodySegment(nextPos);
 			}
 		}
 
@@ -159,6 +173,12 @@ namespace Hero
 		{
 			var firstSegmentPos = segments[0].Position;
 			var bonus = field.TryConsumeBonusAt(firstSegmentPos);
+			var bonusSettings = settings.Bonuses.FirstOrDefault(bs => bs.type == bonus);
+			if (bonusSettings != null)
+			{
+				stepTime -= bonusSettings.SpeedIncrease;
+			}
+			
 			switch (bonus)
 			{
 				case Bonus.Growth:

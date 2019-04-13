@@ -27,7 +27,6 @@ namespace Core
 		{
 			var deltaTime = Time.deltaTime;
 			services.CustomUpdate(deltaTime);
-			field.CustomUpdate(deltaTime);
 			snake.CustomUpdate(deltaTime);
 		}
 
@@ -56,9 +55,7 @@ namespace Core
 					snake.Destroy();
 				}
 				CreateSnake();	
-			}
-			if (GUILayout.Button("destroy"))
-			{
+				field.Reset();
 			}
 		}
 	}

@@ -38,6 +38,13 @@ namespace Field
 			SpawnBonus(Bonus.Growth, firstBonusLocation);
 		}
 
+		public void Reset()
+		{
+			bonusesOnMap.Clear();
+			builder.Destroy();
+			Build();
+		}
+
 		public void SpawnBonus(Bonus bonus)
 		{
 			var where = new FieldCoords()
@@ -52,22 +59,17 @@ namespace Field
 		{
 			if (bonusesOnMap.ContainsKey(where))
 			{
-				Debug.LogError("Bonus spawn location is occupied.");
+				Debug.Log("Bonus spawn location is occupied.");
 				return;
 			}
 			bonusesOnMap.Add(where, bonus);
 			builder.SpawnBonus(bonus, where);
 		}
 
-		public void CustomUpdate(float deltaTime)
-		{
-
-		}
-
 		public bool IsInBounds(FieldCoords coords)
 		{
-			return    0 <= coords.X && coords.X <= info.Width 
-				&& 0 <= coords.Y && coords.Y <= info.Length;
+			return    0 <= coords.X && coords.X < info.Width 
+				&& 0 <= coords.Y && coords.Y < info.Length;
 		}
 
 		private int consumedCount;
@@ -88,6 +90,5 @@ namespace Field
 			}
 			return res;
 		}
-
 	}
 }

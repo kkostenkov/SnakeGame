@@ -12,5 +12,15 @@ namespace Hero
 		{
 			consumedBonuses.Add(coords);
 		}
+
+		public bool Has(FieldCoords coords)
+		{
+			return consumedBonuses.Contains(coords);
+		}
+
+		public bool Use(FieldCoords coords)
+		{
+			return consumedBonuses.Remove(coords);
+		}
 	}
 }

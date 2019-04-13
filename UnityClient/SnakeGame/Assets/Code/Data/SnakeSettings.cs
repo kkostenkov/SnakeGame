@@ -14,6 +14,7 @@ namespace Data
 		[HeaderAttribute("Hero")]
 		public Transform BodySegment;
 		public int StartSegmentsCount = 2;
+		public float StartupPauseTime = 2f;
 
 		public float StepTime = 0.5f;
 
@@ -28,5 +29,7 @@ namespace Data
 		public Bonus type;
 		public Transform prefab;
 		public int Frequency;
+
+		public float SpeedIncrease;
 	}
 }

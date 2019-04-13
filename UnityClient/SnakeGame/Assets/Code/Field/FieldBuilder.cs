@@ -43,7 +43,7 @@ namespace Field
 			}
 		}
 
-		public void DestroyTiles()
+		public void Destroy()
 		{
 			for (int i = 0; i < spawnedTiles.Count; i++)
 			{
@@ -51,6 +51,11 @@ namespace Field
 				GameObject.Destroy(tile.gameObject);
 			}
 			spawnedTiles.Clear();
+			foreach (var kvp in spawnedBonuses)
+			{
+				GameObject.Destroy(kvp.Value.gameObject);
+			}
+			spawnedBonuses.Clear();
 		}
 
 		public void SpawnBonus(Bonus what, FieldCoords where)
